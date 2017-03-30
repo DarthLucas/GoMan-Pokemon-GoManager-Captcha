@@ -147,7 +147,7 @@ namespace Goman_Plugin.Modules.AutoEvolveEspeonUmbreon
             if (pokemonDatas.Any(x => x.BuddyTotalKmWalked > 0))
             {
                 var ienumerableEevee = pokemonDatas.Where(x => x.BuddyTotalKmWalked >= 10).Take(1);
-                var result=await manager.Bot.EvolvePokemon(ienumerableEevee);
+                var result = await manager.Bot.EvolvePokemon(ienumerableEevee);
                 OnLogEvent(this, new LogModel(LoggerTypes.Success, result.Message + "Evolve Eevee Buddy on account " + manager.Bot.AccountName),null);
 
             }
