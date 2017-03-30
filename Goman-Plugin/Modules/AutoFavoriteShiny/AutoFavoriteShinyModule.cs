@@ -12,6 +12,7 @@ using GoPlugin.Events;
 using Newtonsoft.Json;
 using MethodResult = Goman_Plugin.Model.MethodResult;
 using POGOProtos.Data;
+using System.Linq;
 
 namespace Goman_Plugin.Modules.AutoFavoriteShiny
 {
@@ -96,18 +97,39 @@ namespace Goman_Plugin.Modules.AutoFavoriteShiny
         private async void OnPokemonCaught(object sender, PokemonCaughtEventArgs e)
         {
             var manager = (IManager)sender;
+            string messageStatus = "FAIL TO FAVORITE";
             if (e.CatchResponse.Status == POGOProtos.Networking.Responses.CatchPokemonResponse.Types.CatchStatus.CatchSuccess)
             {
                 if (e.Pokemon.PokemonDisplay.Shiny)
                 {
-                    GoPlugin.MethodResult result = null;                    
-                    do
-                    {
-                        await Task.Delay(500);
-                        result = await manager.FavoritePokemon(new List<PokemonData>() { e.Pokemon });
-                    } while (!result.Success);
+                    GoPlugin.MethodResult result = null;
+                    var LoggerType = LoggerTypes.PokemonFlee;     
 
-                    OnLogEvent(this, new LogModel(LoggerTypes.Success, result.Message + " Caught ID "+ e.Pokemon.Id+" Shiny on account " + manager.AccountName));
+                        await Task.Delay(500);
+                        IEnumerable<PokemonData> magikarps = manager.Pokemon.Where(poke => (int)poke.PokemonId == 129).OrderByDescending(poke => poke.Cp);
+                        IEnumerable<PokemonData> gyarados = manager.Pokemon.Where(poke => (int)poke.PokemonId == 130).OrderByDescending(poke => poke.Cp);
+                        IEnumerable<PokemonData> magikarp_shiny = magikarps.Where(x => x.PokemonDisplay.Shiny && x.Favorite == 0);
+                        IEnumerable<PokemonData> gyarados_shiny = gyarados.Where(x => x.PokemonDisplay.Shiny && x.Favorite == 0);
+                    if (magikarp_shiny.Count() > 0)
+                    {
+                        result=await manager.FavoritePokemon(magikarp_shiny);
+                        if (result.Success)
+                        {
+                            messageStatus = "Caught Shiny Magikarp";
+                            LoggerType = LoggerTypes.Success;
+                        }
+
+                    }
+                    if (gyarados_shiny.Count() > 0)
+                    {                        
+                        result=await manager.FavoritePokemon(gyarados_shiny);
+                        if (result.Success)
+                        {
+                            messageStatus = "Caught Shiny Gyarados";
+                            LoggerType = LoggerTypes.Success;
+                        }
+                    }
+                    OnLogEvent(this, new LogModel(LoggerType, messageStatus+  " on account " + manager.AccountName));
                 }
             }
         }
