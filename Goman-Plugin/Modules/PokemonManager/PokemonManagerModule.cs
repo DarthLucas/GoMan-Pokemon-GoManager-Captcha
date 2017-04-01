@@ -116,19 +116,22 @@ namespace Goman_Plugin.Modules.PokemonManager
             {
                 var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
                 var pokemonSettings = manager.GetPokemonSetting(pokemonData.PokemonId).Data;
-                var totalCandy =
-                    int.Parse(
-                        (manager.PokemonCandy.FirstOrDefault(x => x.FamilyId == pokemonSettings.FamilyId)?.Candy_)
-                        .ToString());
+
+                int totalCandy;
+                if (int.TryParse((manager.PokemonCandy.FirstOrDefault(x => x.FamilyId == pokemonSettings.FamilyId)?.Candy_) .ToString(),out totalCandy))
+                    pokeSetting.TotalCandy = totalCandy;
+
                 var candyToEvolve = pokemonSettings.CandyToEvolve;
 
                 pokeSetting.CandyToEvolve = candyToEvolve;
-                pokeSetting.TotalCandy = totalCandy;
+
             }
 
+            int totalStardust;
+            if (int.TryParse((manager.PlayerData.Currencies.FirstOrDefault(x => x.Name == "STARDUST")?.Amount).ToString(),out totalStardust))
+                wrappedManager.TotalStardust = totalStardust;
 
-            wrappedManager.TotalStardust =
-                int.Parse((manager.PlayerData.Currencies.FirstOrDefault(x => x.Name == "STARDUST")?.Amount).ToString());
+
         }
 
         public bool PokemonDataMeetsAutoEvolveCriteria(IManager manager, PokemonData pokemonData)

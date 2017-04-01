@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Timers;
 using Goman_Plugin.Wrapper;
 using GoPlugin;
 using GoPlugin.Enums;
-using POGOProtos.Data;
 using MethodResult = Goman_Plugin.Model.MethodResult;
-using Timer = System.Timers.Timer;
 using Goman_Plugin.Model;
 using GoPlugin.Events;
 using POGOProtos.Enums;
