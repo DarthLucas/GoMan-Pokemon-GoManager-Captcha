@@ -126,6 +126,9 @@ namespace Goman_Plugin.Modules.PokemonManager
     }
     public class PokemonManager
     {
+        public int TotalCandy = 0;
+        public int CandyToEvolve = 0;
+
         public PokemonManager(PokemonId pokemonId)
         {
             PokemonId = pokemonId;
@@ -138,7 +141,10 @@ namespace Goman_Plugin.Modules.PokemonManager
         public int MinimumCp { get; set; } = 0;
         public bool AutoRenameWithIv { get; set; } = false;
         public bool AutoFavorite { get; set; } = false;
+        public bool AutoFavoriteShiny { get; set; } = false;
         public bool AutoUpgrade { get; set; } = false;
         public bool AutoEvolve { get; set; } = false;
+
+
     }
 }

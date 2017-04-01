@@ -31,6 +31,7 @@ namespace Goman_Plugin.Wrapper
         public bool AutoUpgrading { get; set; }
         public bool AutoEvolving { get; set; }
         public bool AutoNaming { get; set; }        
+        public int TotalStardust { get; set; }
 
         public LogModel Log { get; set; }
         public string ExpPerHour => ExpPerHourMunger.GetValue(Bot).ToString();
@@ -71,10 +72,8 @@ namespace Goman_Plugin.Wrapper
         private string _lastLastLog;
         private string _lastRunTime;
         private string _lastTillLevelUp;
-        private string _settings;
 
         public Timer ChangeTimer;
-        public Timer RunningTimeTimer;
         public Manager(IManager bot)
         {
             Bot = bot;
@@ -92,18 +91,54 @@ namespace Goman_Plugin.Wrapper
             ChangeTimer.Elapsed += _changeTimer_Elapsed;
             ChangeTimer.Enabled = true;
 
+            bot.OnAccountStart += OnAccountStart;
+            bot.OnAccountStop += OnAccountStop;
             bot.OnCaptcha += OnCaptcha;
+            bot.OnPokemonCaught += OnPokemonCaught;
+            bot.OnPokemonEncounter += OnPokemonEncounter;
+            bot.OnLocationUpdate += OnLocationUpdate;
+            bot.OnPokestopFarmed += OnPokestopFarmed;
         }
+        public event Action<object, EventArgs> OnAccountStartEvent;
+        public event Action<object, EventArgs> OnAccountStopEvent;
         public event Action<object, CaptchaRequiredEventArgs> OnCaptchaEvent;
-        private void OnCaptcha(object sender, CaptchaRequiredEventArgs captchaRequiredEventArgs)
+        public event Action<object, PokemonCaughtEventArgs> OnPokemonCaughtEvent;
+        public event Action<object, PokemonEncounteredEventArgs> OnPokemonEncounterEvent;
+        public event Action<object, LocationUpdateEventArgs> OnLocationUpdateEvent;
+        public event Action<object, EventArgs> OnPokestopFarmedEvent;
+        private void OnAccountStart(object sender, EventArgs e)
         {
-            OnOnCaptchaEvent(this, captchaRequiredEventArgs);
+            OnAccountStartEvent?.Invoke(this, e);
+        }
+        private void OnAccountStop(object sender, EventArgs e)
+        {
+            OnAccountStopEvent?.Invoke(this, e);
+        }
+        private void OnCaptcha(object sender, CaptchaRequiredEventArgs e)
+        {
+            OnCaptchaEvent?.Invoke(this, e);
+        }
+        private void OnPokemonCaught(object sender, PokemonCaughtEventArgs e)
+        {
+            OnPokemonCaughtEvent?.Invoke(this, e);
+        }
+        private void OnPokemonEncounter(object sender, PokemonEncounteredEventArgs e)
+        {
+            OnPokemonEncounterEvent?.Invoke(this, e);
+        }
+        private void OnLocationUpdate(object sender, LocationUpdateEventArgs e)
+        {
+            OnLocationUpdateEvent?.Invoke(this, e);
+        }
+        private void OnPokestopFarmed(object sender, EventArgs e)
+        {
+            OnPokestopFarmedEvent?.Invoke(this, e);
         }
 
         private void _changeTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             if(Bot.State == BotState.Stopped && Bot.AccountState == AccountState.CaptchaRequired)
-                OnOnCaptchaEvent(this, null);
+                OnCaptchaEvent?.Invoke(this, null);
 
             if (!StateChanged()) return;
             OnManagerChanged(this);
@@ -144,10 +179,6 @@ namespace Goman_Plugin.Wrapper
         protected void OnManagerChanged(object arg1)
         {
             ManagerChanged?.Invoke(arg1, EventArgs.Empty);
-        }
-        protected virtual void OnOnCaptchaEvent(object arg1, CaptchaRequiredEventArgs arg2)
-        {
-            OnCaptchaEvent?.Invoke(arg1, arg2);
         }
     }
 }

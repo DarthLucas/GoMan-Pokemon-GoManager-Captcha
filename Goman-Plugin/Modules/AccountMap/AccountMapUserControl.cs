@@ -35,13 +35,20 @@ namespace Goman_Plugin.Modules.AccountMap
 
         }
 
-        internal void SetControls()
+        internal void Opening()
         {
             cbkEnabled.Checked = Plugin.AccountMapModule.Settings.Enabled;
             fastObjectListViewLogs.SetObjects(Plugin.AccountMapModule.Logs);
-            //Plugin.AccountMapModule.LogEvent += (o, model) => fastObjectListViewLogs.AddObject(model);
+            Plugin.AccountMapModule.LogEvent += LogEvent;
         }
-
+        internal void Closing()
+        {
+            Plugin.AccountMapModule.LogEvent -= LogEvent;
+        }
+        private void LogEvent(object arg1, LogModel arg2)
+        {
+            fastObjectListViewLogs.AddObject(arg2);
+        }
         private void _accountTimer_Elapsed(object o, EventArgs e)
         {
             try

@@ -10,7 +10,6 @@ using Goman_Plugin.Modules.Authentication;
 using Goman_Plugin.Modules.Captcha;
 using Goman_Plugin.Modules.PokemonFeeder;
 using Goman_Plugin.Modules.PokemonManager;
-using Goman_Plugin.Modules.AutoFavoriteShiny;
 using Goman_Plugin.Modules.AutoEvolveEspeonUmbreon;
 using Goman_Plugin.View;
 using Goman_Plugin.Wrapper;
@@ -27,7 +26,6 @@ namespace Goman_Plugin
         internal static AuthenticationModule AuthenticationModule = new AuthenticationModule();
         internal static PokemonFeederModule PokemonFeederModule = new PokemonFeederModule();
         internal static CaptchaModule CaptchaModule = new CaptchaModule();
-        internal static AutoFavoriteShinyModule AutoFavoriteShinyModule = new AutoFavoriteShinyModule();
         internal static AutoEvolveEspeonUmbreonModule AutoEvolveEspeonUmbreonModule = new AutoEvolveEspeonUmbreonModule();
 
         internal static PokemonManagerModule PokemonManagerModule;
@@ -56,7 +54,7 @@ namespace Goman_Plugin
                 var globalSettingsSaveResult = await GlobalSettings.Save("PluginModule");
             }
 
-            PokemonManagerModule = new PokemonManagerModule(this);
+            PokemonManagerModule = new PokemonManagerModule();
 
             if (GlobalSettings.Extra.AutoUpdate)
                 await Update();
@@ -92,7 +90,6 @@ namespace Goman_Plugin
         {
             if (moduleEvent == ModuleEvent.Enabled)
             {
-                await AutoFavoriteShinyModule.Enable();
                 await PokemonFeederModule.Enable();
                 await AccountMapModule.Enable();
                 await CaptchaModule.Enable();
@@ -114,7 +111,6 @@ namespace Goman_Plugin
                     Accounts.Add(wrappedManager);
                     OnManagerRemoved(this, wrappedManager);
                 }
-                await AutoFavoriteShinyModule.Disable();
                 await PokemonFeederModule.Disable();
                 await AccountMapModule.Disable();
                 await CaptchaModule.Disable();

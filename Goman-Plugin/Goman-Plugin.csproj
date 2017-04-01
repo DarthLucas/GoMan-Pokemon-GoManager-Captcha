@@ -103,14 +103,6 @@
     <Compile Include="Modules\AutoEvolveEspeonUmbreon\AutoEvolveEspeonUmbreonControl.Designer.cs">
       <DependentUpon>AutoEvolveEspeonUmbreonControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyModule.cs" />
-    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinySettings.cs" />
-    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyUserControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyUserControl.Designer.cs">
-      <DependentUpon>AutoFavoriteShinyUserControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Modules\PokemonManager\PokemonManagerUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -179,9 +171,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\AutoEvolveEspeonUmbreon\AutoEvolveEspeonUmbreonControl.resx">
       <DependentUpon>AutoEvolveEspeonUmbreonControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyUserControl.resx">
-      <DependentUpon>AutoFavoriteShinyUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Captcha\CaptchaUserControl.resx">
       <DependentUpon>CaptchaUserControl.cs</DependentUpon>

@@ -51,8 +51,11 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.autoFavoriteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoUpgradeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoEvolveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoRenameToIVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoFavoriteShinyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlCaptcha = new Goman_Plugin.View.BorderlessTabControl();
             this.tpSettings = new Goman_Plugin.View.BorderlessTabPage();
+            this.label1 = new System.Windows.Forms.Label();
             this.fastObjectListViewPokemon = new BrightIdeasSoftware.FastObjectListView();
             this.olvColumnPokemonId = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnQuantity = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -60,6 +63,7 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.olvColumnMinimumCp = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnAutoRenameWithIv = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnAutoFavorite = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumnAutoFavoriteShiny = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnAutoUpgrade = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnAutoEvolve = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.cbkEnabled = new System.Windows.Forms.CheckBox();
@@ -69,7 +73,6 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.olvColumnMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnExceptionMessage = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumnStackTrace = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.autoRenameToIVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.tabControlCaptcha.SuspendLayout();
             this.tpSettings.SuspendLayout();
@@ -168,7 +171,8 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.autoFavoriteToolStripMenuItem,
             this.autoUpgradeToolStripMenuItem,
             this.autoEvolveToolStripMenuItem,
-            this.autoRenameToIVToolStripMenuItem});
+            this.autoRenameToIVToolStripMenuItem,
+            this.autoFavoriteShinyToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(188, 136);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
@@ -234,6 +238,26 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.autoEvolveToolStripMenuItem.Text = "Auto Evolve";
             this.autoEvolveToolStripMenuItem.CheckedChanged += new System.EventHandler(this.autoEvolveToolStripMenuItem_CheckedChanged);
             // 
+            // autoRenameToIVToolStripMenuItem
+            // 
+            this.autoRenameToIVToolStripMenuItem.Checked = true;
+            this.autoRenameToIVToolStripMenuItem.CheckOnClick = true;
+            this.autoRenameToIVToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoRenameToIVToolStripMenuItem.Name = "autoRenameToIVToolStripMenuItem";
+            this.autoRenameToIVToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.autoRenameToIVToolStripMenuItem.Text = "Auto Rename With IV";
+            this.autoRenameToIVToolStripMenuItem.Click += new System.EventHandler(this.autoRenameToIVToolStripMenuItem_Click);
+            // 
+            // autoFavoriteShinyToolStripMenuItem
+            // 
+            this.autoFavoriteShinyToolStripMenuItem.Checked = true;
+            this.autoFavoriteShinyToolStripMenuItem.CheckOnClick = true;
+            this.autoFavoriteShinyToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoFavoriteShinyToolStripMenuItem.Name = "autoFavoriteShinyToolStripMenuItem";
+            this.autoFavoriteShinyToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.autoFavoriteShinyToolStripMenuItem.Text = "Auto Favorite Shiny";
+            this.autoFavoriteShinyToolStripMenuItem.Click += new System.EventHandler(this.autoFavoriteShinyToolStripMenuItem_Click);
+            // 
             // tabControlCaptcha
             // 
             this.tabControlCaptcha.Controls.Add(this.tpSettings);
@@ -241,26 +265,34 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.tabControlCaptcha.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlCaptcha.ItemSize = new System.Drawing.Size(26, 30);
             this.tabControlCaptcha.Location = new System.Drawing.Point(0, 0);
-            this.tabControlCaptcha.Margin = new System.Windows.Forms.Padding(4);
             this.tabControlCaptcha.Multiline = true;
             this.tabControlCaptcha.Name = "tabControlCaptcha";
             this.tabControlCaptcha.SelectedIndex = 0;
-            this.tabControlCaptcha.Size = new System.Drawing.Size(1003, 580);
+            this.tabControlCaptcha.Size = new System.Drawing.Size(752, 471);
             this.tabControlCaptcha.TabIndex = 2;
             // 
             // tpSettings
             // 
             this.tpSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
+            this.tpSettings.Controls.Add(this.label1);
             this.tpSettings.Controls.Add(this.fastObjectListViewPokemon);
             this.tpSettings.Controls.Add(this.cbkEnabled);
             this.tpSettings.ForeColor = System.Drawing.Color.LightGray;
-            this.tpSettings.Location = new System.Drawing.Point(0, 30);
-            this.tpSettings.Margin = new System.Windows.Forms.Padding(4);
+            this.tpSettings.Location = new System.Drawing.Point(1, 31);
             this.tpSettings.Name = "tpSettings";
-            this.tpSettings.Padding = new System.Windows.Forms.Padding(4);
-            this.tpSettings.Size = new System.Drawing.Size(1003, 550);
+            this.tpSettings.Padding = new System.Windows.Forms.Padding(3);
+            this.tpSettings.Size = new System.Drawing.Size(750, 439);
             this.tpSettings.TabIndex = 2;
             this.tpSettings.Text = "Settings";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(111, 8);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(232, 13);
+            this.label1.TabIndex = 14;
+            this.label1.Text = "Auto Shiny ignores Minimum IV and CP settings.";
             // 
             // fastObjectListViewPokemon
             // 
@@ -270,6 +302,7 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.fastObjectListViewPokemon.AllColumns.Add(this.olvColumnMinimumCp);
             this.fastObjectListViewPokemon.AllColumns.Add(this.olvColumnAutoRenameWithIv);
             this.fastObjectListViewPokemon.AllColumns.Add(this.olvColumnAutoFavorite);
+            this.fastObjectListViewPokemon.AllColumns.Add(this.olvColumnAutoFavoriteShiny);
             this.fastObjectListViewPokemon.AllColumns.Add(this.olvColumnAutoUpgrade);
             this.fastObjectListViewPokemon.AllColumns.Add(this.olvColumnAutoEvolve);
             this.fastObjectListViewPokemon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -284,6 +317,7 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.olvColumnMinimumCp,
             this.olvColumnAutoRenameWithIv,
             this.olvColumnAutoFavorite,
+            this.olvColumnAutoFavoriteShiny,
             this.olvColumnAutoUpgrade,
             this.olvColumnAutoEvolve});
             this.fastObjectListViewPokemon.ContextMenuStrip = this.contextMenuStrip1;
@@ -291,11 +325,11 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.fastObjectListViewPokemon.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.fastObjectListViewPokemon.ForeColor = System.Drawing.Color.LightGray;
             this.fastObjectListViewPokemon.FullRowSelect = true;
-            this.fastObjectListViewPokemon.Location = new System.Drawing.Point(0, 34);
-            this.fastObjectListViewPokemon.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.fastObjectListViewPokemon.Location = new System.Drawing.Point(0, 28);
+            this.fastObjectListViewPokemon.Margin = new System.Windows.Forms.Padding(2);
             this.fastObjectListViewPokemon.Name = "fastObjectListViewPokemon";
             this.fastObjectListViewPokemon.ShowGroups = false;
-            this.fastObjectListViewPokemon.Size = new System.Drawing.Size(1000, 506);
+            this.fastObjectListViewPokemon.Size = new System.Drawing.Size(750, 411);
             this.fastObjectListViewPokemon.TabIndex = 13;
             this.fastObjectListViewPokemon.UseCellFormatEvents = true;
             this.fastObjectListViewPokemon.UseCompatibleStateImageBehavior = false;
@@ -309,7 +343,7 @@ namespace Goman_Plugin.Modules.PokemonManager
             // 
             this.olvColumnPokemonId.AspectName = "PokemonName";
             this.olvColumnPokemonId.Text = "Pokemon";
-            this.olvColumnPokemonId.Width = 123;
+            this.olvColumnPokemonId.Width = 105;
             // 
             // olvColumnQuantity
             // 
@@ -340,6 +374,12 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.olvColumnAutoFavorite.Text = "Auto Favorite";
             this.olvColumnAutoFavorite.Width = 83;
             // 
+            // olvColumnAutoFavoriteShiny
+            // 
+            this.olvColumnAutoFavoriteShiny.AspectName = "AutoFavoriteShiny";
+            this.olvColumnAutoFavoriteShiny.Text = "Auto Favorite Shiny";
+            this.olvColumnAutoFavoriteShiny.Width = 106;
+            // 
             // olvColumnAutoUpgrade
             // 
             this.olvColumnAutoUpgrade.AspectName = "AutoUpgrade";
@@ -357,10 +397,9 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.cbkEnabled.AutoSize = true;
             this.cbkEnabled.Checked = true;
             this.cbkEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbkEnabled.Location = new System.Drawing.Point(8, 7);
-            this.cbkEnabled.Margin = new System.Windows.Forms.Padding(4);
+            this.cbkEnabled.Location = new System.Drawing.Point(6, 6);
             this.cbkEnabled.Name = "cbkEnabled";
-            this.cbkEnabled.Size = new System.Drawing.Size(78, 20);
+            this.cbkEnabled.Size = new System.Drawing.Size(65, 17);
             this.cbkEnabled.TabIndex = 12;
             this.cbkEnabled.Text = "Enabled";
             this.cbkEnabled.UseVisualStyleBackColor = true;
@@ -371,10 +410,9 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.tpLogs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
             this.tpLogs.Controls.Add(this.fastObjectListViewLogs);
             this.tpLogs.ForeColor = System.Drawing.Color.LightGray;
-            this.tpLogs.Location = new System.Drawing.Point(0, 30);
-            this.tpLogs.Margin = new System.Windows.Forms.Padding(4);
+            this.tpLogs.Location = new System.Drawing.Point(1, 31);
             this.tpLogs.Name = "tpLogs";
-            this.tpLogs.Size = new System.Drawing.Size(1003, 550);
+            this.tpLogs.Size = new System.Drawing.Size(750, 439);
             this.tpLogs.TabIndex = 3;
             this.tpLogs.Text = "Logs";
             // 
@@ -397,10 +435,10 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.fastObjectListViewLogs.ForeColor = System.Drawing.Color.LightGray;
             this.fastObjectListViewLogs.FullRowSelect = true;
             this.fastObjectListViewLogs.Location = new System.Drawing.Point(0, 0);
-            this.fastObjectListViewLogs.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.fastObjectListViewLogs.Margin = new System.Windows.Forms.Padding(2);
             this.fastObjectListViewLogs.Name = "fastObjectListViewLogs";
             this.fastObjectListViewLogs.ShowGroups = false;
-            this.fastObjectListViewLogs.Size = new System.Drawing.Size(1003, 550);
+            this.fastObjectListViewLogs.Size = new System.Drawing.Size(750, 439);
             this.fastObjectListViewLogs.TabIndex = 3;
             this.fastObjectListViewLogs.UseCellFormatEvents = true;
             this.fastObjectListViewLogs.UseCompatibleStateImageBehavior = false;
@@ -435,22 +473,13 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.olvColumnStackTrace.Text = "StackTrace";
             this.olvColumnStackTrace.Width = 372;
             // 
-            // autoRenameToIVToolStripMenuItem
-            // 
-            this.autoRenameToIVToolStripMenuItem.CheckOnClick = true;
-            this.autoRenameToIVToolStripMenuItem.Name = "autoRenameToIVToolStripMenuItem";
-            this.autoRenameToIVToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.autoRenameToIVToolStripMenuItem.Text = "Auto Rename With IV";
-            this.autoRenameToIVToolStripMenuItem.Click += new System.EventHandler(this.autoRenameToIVToolStripMenuItem_Click);
-            // 
             // PokemonManagerUserControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControlCaptcha);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "PokemonManagerUserControl";
-            this.Size = new System.Drawing.Size(1003, 580);
+            this.Size = new System.Drawing.Size(752, 471);
             this.contextMenuStrip1.ResumeLayout(false);
             this.tabControlCaptcha.ResumeLayout(false);
             this.tpSettings.ResumeLayout(false);
@@ -503,5 +532,8 @@ namespace Goman_Plugin.Modules.PokemonManager
         private System.Windows.Forms.ToolStripMenuItem setQuantityToolStripMenuItem;
         private BrightIdeasSoftware.OLVColumn olvColumnAutoRenameWithIv;
         private System.Windows.Forms.ToolStripMenuItem autoRenameToIVToolStripMenuItem;
+        private BrightIdeasSoftware.OLVColumn olvColumnAutoFavoriteShiny;
+        private System.Windows.Forms.ToolStripMenuItem autoFavoriteShinyToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
     }
 }

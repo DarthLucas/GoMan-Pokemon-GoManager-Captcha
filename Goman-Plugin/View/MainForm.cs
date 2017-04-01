@@ -17,8 +17,6 @@ namespace Goman_Plugin.View
             InitializeComponent();
             _accounts = managers;
             this.Text = "GoMan Plugin - v" + VersionModel.CurrentVersion;
-
-
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -26,14 +24,18 @@ namespace Goman_Plugin.View
             cbkAutoUpdate.Checked = Plugin.GlobalSettings.Extra.AutoUpdate;
             numericUpDownMaximumLogs.Value = Plugin.GlobalSettings.Extra.MaximumLogs;
 
-            captchaUserControl1.SetControls();
-            _accountMapUserControl1.SetControls();
-            pokemonFeederUserControl1.SetControls();
-            pokemonManagerUserControl1.SetControls();
-            autoEvolveEspeonUmbreonControl1.SetControls();
-            autoFavoriteShinyUserControl1.SetControls();
+            captchaUserControl1.Opening();
+            _accountMapUserControl1.Opening();
+            pokemonManagerUserControl1.Opening();
+            autoEvolveEspeonUmbreonControl1.Opening();
         }
-
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            captchaUserControl1.Closing();
+            _accountMapUserControl1.Closing();
+            pokemonManagerUserControl1.Closing();
+            autoEvolveEspeonUmbreonControl1.Closing();
+        }
         private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
            var ctlTab = (BorderlessTabControl)sender;
