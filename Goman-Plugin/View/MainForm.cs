@@ -31,10 +31,10 @@ namespace Goman_Plugin.View
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            captchaUserControl1.Closing();
-            _accountMapUserControl1.Closing();
-            pokemonManagerUserControl1.Closing();
-            autoEvolveEspeonUmbreonControl1.Closing();
+          //  captchaUserControl1.Closing();
+          //  _accountMapUserControl1.Closing();
+          //  pokemonManagerUserControl1.Closing();
+          //  autoEvolveEspeonUmbreonControl1.Closing();
         }
         private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {

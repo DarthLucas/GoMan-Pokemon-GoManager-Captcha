@@ -43,7 +43,7 @@ namespace Goman_Plugin.Modules.AccountMap
         }
         internal void Closing()
         {
-            Plugin.AccountMapModule.LogEvent -= LogEvent;
+           // Plugin.AccountMapModule.LogEvent -= LogEvent;
         }
         private void LogEvent(object arg1, LogModel arg2)
         {

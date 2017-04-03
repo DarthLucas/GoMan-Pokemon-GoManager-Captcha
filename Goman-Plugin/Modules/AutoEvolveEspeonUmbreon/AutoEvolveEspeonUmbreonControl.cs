@@ -28,7 +28,7 @@ namespace Goman_Plugin.Modules.AutoEvolveEspeonUmbreon
         }
         internal void Closing()
         {
-            Plugin.AutoEvolveEspeonUmbreonModule.LogEvent -= LogEvent;
+           // Plugin.AutoEvolveEspeonUmbreonModule.LogEvent -= LogEvent;
         }
         private void LogEvent(object arg1, LogModel arg2)
         {

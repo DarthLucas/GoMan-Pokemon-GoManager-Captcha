@@ -29,7 +29,7 @@ namespace Goman_Plugin.Modules.PokemonManager
         }
         internal void Closing()
         {
-            Plugin.PokemonManagerModule.LogEvent -= LogEvent;
+            //Plugin.PokemonManagerModule.LogEvent -= LogEvent;
         }
         private void LogEvent(object arg1, LogModel arg2)
         {
