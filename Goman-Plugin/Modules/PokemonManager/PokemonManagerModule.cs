@@ -95,12 +95,15 @@ namespace Goman_Plugin.Modules.PokemonManager
                 || pokemonManager.AutoRenameWithIv
                 || pokemonManager.AutoFavoriteShiny;
 
+            if (!settingConfiguredForPokemon)
+                return false;
+
             var meetsMinimumIvAndCp = manager.CalculateIVPerfection(poke).Data >= pokemonManager.MinimumIv
                                       && poke.Cp >= pokemonManager.MinimumCp;
 
             var isConfiguredForShinyAndIsShiny = (pokemonManager.AutoFavoriteShiny && poke.PokemonDisplay.Shiny);
 
-            return settingConfiguredForPokemon && (meetsMinimumIvAndCp || isConfiguredForShinyAndIsShiny);
+            return meetsMinimumIvAndCp || isConfiguredForShinyAndIsShiny;
         }
 
         public void UpdateStarDustAndCandy(Manager wrappedManager, List<PokemonData> pokemonToHandle)
@@ -137,13 +140,11 @@ namespace Goman_Plugin.Modules.PokemonManager
         public bool PokemonDataMeetsAutoEvolveCriteria(IManager manager, PokemonData pokemonData)
         {
             var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
-            if (pokeSetting.AutoEvolve && pokeSetting.CandyToEvolve > 0 && pokeSetting.TotalCandy >= pokeSetting.CandyToEvolve)
-            {
-                pokeSetting.TotalCandy -= pokeSetting.CandyToEvolve;
-                return true;
-            }
+            if (!pokeSetting.AutoEvolve || pokeSetting.CandyToEvolve <= 0 ||
+                pokeSetting.TotalCandy < pokeSetting.CandyToEvolve) return false;
 
-            return false;
+            pokeSetting.TotalCandy -= pokeSetting.CandyToEvolve;
+            return true;
         }
 
         public bool PokemonDataMeetsAutoFavoriteCriteria(PokemonData pokemonData)
