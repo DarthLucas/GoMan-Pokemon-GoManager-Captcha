@@ -40,25 +40,37 @@ namespace Goman_Plugin.View
             this.tabControlMain = new Goman_Plugin.View.BorderlessTabControl();
             this.tpCaptcha = new System.Windows.Forms.TabPage();
             this.captchaUserControl1 = new Goman_Plugin.Modules.Captcha.CaptchaUserControl();
-            this.tpPokemonManager = new System.Windows.Forms.TabPage();
-            this.pokemonManagerUserControl1 = new Goman_Plugin.Modules.PokemonManager.PokemonManagerUserControl();
+            this.tpAutoFavoriteShiny = new System.Windows.Forms.TabPage();
+            this.autoFavoriteShinyUserControl1 = new Goman_Plugin.Modules.AutoFavoriteShiny.AutoFavoriteShinyUserControl();
             this.tbAutoEvolveEspeonUmbreon = new System.Windows.Forms.TabPage();
             this.autoEvolveEspeonUmbreonControl1 = new Goman_Plugin.Modules.AutoEvolveEspeonUmbreon.AutoEvolveEspeonUmbreonControl();
-            this.tpAccountFeeder = new System.Windows.Forms.TabPage();
+            this.tabAutoRename100IVOnCaught = new System.Windows.Forms.TabPage();
+            this.autoRename100IVOnCaughtUserControl1 = new Goman_Plugin.Modules.AutoRename100IVOnCaught.AutoRename100IVOnCaughtUserControl();
+            this.tpPokemonManager = new System.Windows.Forms.TabPage();
+            this.pokemonManagerUserControl1 = new Goman_Plugin.Modules.PokemonManager.PokemonManagerUserControl();
+            this.tpPokemonFeeder = new System.Windows.Forms.TabPage();
+            this.pokemonFeederUserControl1 = new Goman_Plugin.Modules.PokemonFeeder.PokemonFeederUserControl();
+            this.tpAccountMap = new System.Windows.Forms.TabPage();
             this._accountMapUserControl1 = new Goman_Plugin.Modules.AccountMap.AccountMapUserControl();
             this.tpGlobalSettings = new Goman_Plugin.View.BorderlessTabPage();
             this.numericUpDownMaximumLogs = new System.Windows.Forms.NumericUpDown();
             this.labelMaximumLogs = new System.Windows.Forms.Label();
             this.cbkSaveLogs = new System.Windows.Forms.CheckBox();
             this.cbkAutoUpdate = new System.Windows.Forms.CheckBox();
+            this.tpAutoStratTechnique = new System.Windows.Forms.TabPage();
+            this.autoStratTechniqueUserControl1 = new Goman_Plugin.Modules.AutoStratTechnique.AutoStratTechniqueUserControl();
             this.statusStrip1.SuspendLayout();
             this.tabControlMain.SuspendLayout();
             this.tpCaptcha.SuspendLayout();
-            this.tpPokemonManager.SuspendLayout();
+            this.tpAutoFavoriteShiny.SuspendLayout();
             this.tbAutoEvolveEspeonUmbreon.SuspendLayout();
-            this.tpAccountFeeder.SuspendLayout();
+            this.tabAutoRename100IVOnCaught.SuspendLayout();
+            this.tpPokemonManager.SuspendLayout();
+            this.tpPokemonFeeder.SuspendLayout();
+            this.tpAccountMap.SuspendLayout();
             this.tpGlobalSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaximumLogs)).BeginInit();
+            this.tpAutoStratTechnique.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -123,9 +135,13 @@ namespace Goman_Plugin.View
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControlMain.Controls.Add(this.tpCaptcha);
-            this.tabControlMain.Controls.Add(this.tpPokemonManager);
+            this.tabControlMain.Controls.Add(this.tpAutoFavoriteShiny);
             this.tabControlMain.Controls.Add(this.tbAutoEvolveEspeonUmbreon);
-            this.tabControlMain.Controls.Add(this.tpAccountFeeder);
+            this.tabControlMain.Controls.Add(this.tabAutoRename100IVOnCaught);
+            this.tabControlMain.Controls.Add(this.tpPokemonManager);
+            this.tabControlMain.Controls.Add(this.tpPokemonFeeder);
+            this.tabControlMain.Controls.Add(this.tpAccountMap);
+            this.tabControlMain.Controls.Add(this.tpAutoStratTechnique);
             this.tabControlMain.Controls.Add(this.tpGlobalSettings);
             this.tabControlMain.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tabControlMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -158,6 +174,58 @@ namespace Goman_Plugin.View
             this.captchaUserControl1.Size = new System.Drawing.Size(1032, 302);
             this.captchaUserControl1.TabIndex = 0;
             // 
+            // tpAutoFavoriteShiny
+            // 
+            this.tpAutoFavoriteShiny.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
+            this.tpAutoFavoriteShiny.Controls.Add(this.autoFavoriteShinyUserControl1);
+            this.tpAutoFavoriteShiny.ForeColor = System.Drawing.Color.LightGray;
+            this.tpAutoFavoriteShiny.Location = new System.Drawing.Point(116, 1);
+            this.tpAutoFavoriteShiny.Name = "tpAutoFavoriteShiny";
+            this.tpAutoFavoriteShiny.Size = new System.Drawing.Size(1001, 300);
+            this.tpAutoFavoriteShiny.TabIndex = 5;
+            this.tpAutoFavoriteShiny.Text = "Favorite Shiny";
+            // 
+            // autoFavoriteShinyUserControl1
+            // 
+            this.autoFavoriteShinyUserControl1.Location = new System.Drawing.Point(0, -1);
+            this.autoFavoriteShinyUserControl1.Name = "autoFavoriteShinyUserControl1";
+            this.autoFavoriteShinyUserControl1.Size = new System.Drawing.Size(1001, 301);
+            this.autoFavoriteShinyUserControl1.TabIndex = 0;
+            // 
+            // tbAutoEvolveEspeonUmbreon
+            // 
+            this.tbAutoEvolveEspeonUmbreon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
+            this.tbAutoEvolveEspeonUmbreon.Controls.Add(this.autoEvolveEspeonUmbreonControl1);
+            this.tbAutoEvolveEspeonUmbreon.Location = new System.Drawing.Point(116, 1);
+            this.tbAutoEvolveEspeonUmbreon.Name = "tbAutoEvolveEspeonUmbreon";
+            this.tbAutoEvolveEspeonUmbreon.Size = new System.Drawing.Size(1001, 300);
+            this.tbAutoEvolveEspeonUmbreon.TabIndex = 6;
+            this.tbAutoEvolveEspeonUmbreon.Text = "Evolve Espeon Umbreon";
+            // 
+            // autoEvolveEspeonUmbreonControl1
+            // 
+            this.autoEvolveEspeonUmbreonControl1.Location = new System.Drawing.Point(0, -1);
+            this.autoEvolveEspeonUmbreonControl1.Name = "autoEvolveEspeonUmbreonControl1";
+            this.autoEvolveEspeonUmbreonControl1.Size = new System.Drawing.Size(1002, 301);
+            this.autoEvolveEspeonUmbreonControl1.TabIndex = 0;
+            // 
+            // tabAutoRename100IVOnCaught
+            // 
+            this.tabAutoRename100IVOnCaught.Controls.Add(this.autoRename100IVOnCaughtUserControl1);
+            this.tabAutoRename100IVOnCaught.Location = new System.Drawing.Point(116, 1);
+            this.tabAutoRename100IVOnCaught.Name = "tabAutoRename100IVOnCaught";
+            this.tabAutoRename100IVOnCaught.Size = new System.Drawing.Size(1001, 300);
+            this.tabAutoRename100IVOnCaught.TabIndex = 7;
+            this.tabAutoRename100IVOnCaught.Text = "AutoRename100IV";
+            this.tabAutoRename100IVOnCaught.UseVisualStyleBackColor = true;
+            // 
+            // autoRename100IVOnCaughtUserControl1
+            // 
+            this.autoRename100IVOnCaughtUserControl1.Location = new System.Drawing.Point(0, -1);
+            this.autoRename100IVOnCaughtUserControl1.Name = "autoRename100IVOnCaughtUserControl1";
+            this.autoRename100IVOnCaughtUserControl1.Size = new System.Drawing.Size(1002, 302);
+            this.autoRename100IVOnCaughtUserControl1.TabIndex = 0;
+            // 
             // tpPokemonManager
             // 
             this.tpPokemonManager.Controls.Add(this.pokemonManagerUserControl1);
@@ -177,32 +245,35 @@ namespace Goman_Plugin.View
             this.pokemonManagerUserControl1.Size = new System.Drawing.Size(1001, 300);
             this.pokemonManagerUserControl1.TabIndex = 0;
             // 
-            // tbAutoEvolveEspeonUmbreon
+            // tpPokemonFeeder
             // 
-            this.tbAutoEvolveEspeonUmbreon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
-            this.tbAutoEvolveEspeonUmbreon.Controls.Add(this.autoEvolveEspeonUmbreonControl1);
-            this.tbAutoEvolveEspeonUmbreon.Location = new System.Drawing.Point(116, 1);
-            this.tbAutoEvolveEspeonUmbreon.Name = "tbAutoEvolveEspeonUmbreon";
-            this.tbAutoEvolveEspeonUmbreon.Size = new System.Drawing.Size(1001, 300);
-            this.tbAutoEvolveEspeonUmbreon.TabIndex = 6;
-            this.tbAutoEvolveEspeonUmbreon.Text = "Evolve Espeon Umbreon ( NO RENAME TRICK )";
+            this.tpPokemonFeeder.Controls.Add(this.pokemonFeederUserControl1);
+            this.tpPokemonFeeder.Location = new System.Drawing.Point(116, 1);
+            this.tpPokemonFeeder.Name = "tpPokemonFeeder";
+            this.tpPokemonFeeder.Size = new System.Drawing.Size(1001, 300);
+            this.tpPokemonFeeder.TabIndex = 2;
+            this.tpPokemonFeeder.Text = "Pokemon Feeder";
+            this.tpPokemonFeeder.UseVisualStyleBackColor = true;
             // 
-            // autoEvolveEspeonUmbreonControl1
+            // pokemonFeederUserControl1
             // 
-            this.autoEvolveEspeonUmbreonControl1.Location = new System.Drawing.Point(0, -1);
-            this.autoEvolveEspeonUmbreonControl1.Name = "autoEvolveEspeonUmbreonControl1";
-            this.autoEvolveEspeonUmbreonControl1.Size = new System.Drawing.Size(1002, 301);
-            this.autoEvolveEspeonUmbreonControl1.TabIndex = 0;
+            this.pokemonFeederUserControl1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(43)))), ((int)(((byte)(43)))), ((int)(((byte)(43)))));
+            this.pokemonFeederUserControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pokemonFeederUserControl1.Location = new System.Drawing.Point(0, 0);
+            this.pokemonFeederUserControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pokemonFeederUserControl1.Name = "pokemonFeederUserControl1";
+            this.pokemonFeederUserControl1.Size = new System.Drawing.Size(1001, 300);
+            this.pokemonFeederUserControl1.TabIndex = 0;
             // 
-            // tpAccountFeeder
+            // tpAccountMap
             // 
-            this.tpAccountFeeder.Controls.Add(this._accountMapUserControl1);
-            this.tpAccountFeeder.Location = new System.Drawing.Point(116, 1);
-            this.tpAccountFeeder.Name = "tpAccountFeeder";
-            this.tpAccountFeeder.Size = new System.Drawing.Size(1001, 300);
-            this.tpAccountFeeder.TabIndex = 3;
-            this.tpAccountFeeder.Text = "Account Map";
-            this.tpAccountFeeder.UseVisualStyleBackColor = true;
+            this.tpAccountMap.Controls.Add(this._accountMapUserControl1);
+            this.tpAccountMap.Location = new System.Drawing.Point(116, 1);
+            this.tpAccountMap.Name = "tpAccountMap";
+            this.tpAccountMap.Size = new System.Drawing.Size(1001, 300);
+            this.tpAccountMap.TabIndex = 3;
+            this.tpAccountMap.Text = "Account Map";
+            this.tpAccountMap.UseVisualStyleBackColor = true;
             // 
             // _accountMapUserControl1
             // 
@@ -287,6 +358,23 @@ namespace Goman_Plugin.View
             this.cbkAutoUpdate.UseVisualStyleBackColor = true;
             this.cbkAutoUpdate.CheckedChanged += new System.EventHandler(this.ckAutoUpdate_CheckedChanged);
             // 
+            // tpAutoStratTechnique
+            // 
+            this.tpAutoStratTechnique.Controls.Add(this.autoStratTechniqueUserControl1);
+            this.tpAutoStratTechnique.Location = new System.Drawing.Point(116, 1);
+            this.tpAutoStratTechnique.Name = "tpAutoStratTechnique";
+            this.tpAutoStratTechnique.Size = new System.Drawing.Size(1001, 300);
+            this.tpAutoStratTechnique.TabIndex = 8;
+            this.tpAutoStratTechnique.Text = "Auto Strat";
+            this.tpAutoStratTechnique.UseVisualStyleBackColor = true;
+            // 
+            // autoStratTechniqueUserControl1
+            // 
+            this.autoStratTechniqueUserControl1.Location = new System.Drawing.Point(0, 0);
+            this.autoStratTechniqueUserControl1.Name = "autoStratTechniqueUserControl1";
+            this.autoStratTechniqueUserControl1.Size = new System.Drawing.Size(1002, 301);
+            this.autoStratTechniqueUserControl1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -300,18 +388,21 @@ namespace Goman_Plugin.View
             this.Name = "MainForm";
             this.Text = "GoMan Plugin";
             this.TransparencyKey = System.Drawing.Color.Crimson;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.tabControlMain.ResumeLayout(false);
             this.tpCaptcha.ResumeLayout(false);
-            this.tpPokemonManager.ResumeLayout(false);
+            this.tpAutoFavoriteShiny.ResumeLayout(false);
             this.tbAutoEvolveEspeonUmbreon.ResumeLayout(false);
-            this.tpAccountFeeder.ResumeLayout(false);
+            this.tabAutoRename100IVOnCaught.ResumeLayout(false);
+            this.tpPokemonManager.ResumeLayout(false);
+            this.tpPokemonFeeder.ResumeLayout(false);
+            this.tpAccountMap.ResumeLayout(false);
             this.tpGlobalSettings.ResumeLayout(false);
             this.tpGlobalSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaximumLogs)).EndInit();
+            this.tpAutoStratTechnique.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -326,7 +417,9 @@ namespace Goman_Plugin.View
         private System.Windows.Forms.CheckBox cbkSaveLogs;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelCheapProxy;
-        private System.Windows.Forms.TabPage tpAccountFeeder;
+        private System.Windows.Forms.TabPage tpPokemonFeeder;
+        private System.Windows.Forms.TabPage tpAccountMap;
+        private PokemonFeederUserControl pokemonFeederUserControl1;
         private Modules.AccountMap.AccountMapUserControl _accountMapUserControl1;
         private Modules.Captcha.CaptchaUserControl captchaUserControl1;
         private System.Windows.Forms.NumericUpDown numericUpDownMaximumLogs;
@@ -336,7 +429,13 @@ namespace Goman_Plugin.View
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDonate;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelAccountCreator;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelDiscord;
+        private System.Windows.Forms.TabPage tpAutoFavoriteShiny;
+        private Modules.AutoFavoriteShiny.AutoFavoriteShinyUserControl autoFavoriteShinyUserControl1;
         private System.Windows.Forms.TabPage tbAutoEvolveEspeonUmbreon;
         private Modules.AutoEvolveEspeonUmbreon.AutoEvolveEspeonUmbreonControl autoEvolveEspeonUmbreonControl1;
+        private System.Windows.Forms.TabPage tabAutoRename100IVOnCaught;
+        private Modules.AutoRename100IVOnCaught.AutoRename100IVOnCaughtUserControl autoRename100IVOnCaughtUserControl1;
+        private System.Windows.Forms.TabPage tpAutoStratTechnique;
+        private Modules.AutoStratTechnique.AutoStratTechniqueUserControl autoStratTechniqueUserControl1;
     }
 }

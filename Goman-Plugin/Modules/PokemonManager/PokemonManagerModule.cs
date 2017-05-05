@@ -3,179 +3,119 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
-using Goman_Plugin.Model;
-using Goman_Plugin.Modules.PokemonFeeder;
+using System.Windows.Forms;
 using Goman_Plugin.Wrapper;
 using GoPlugin;
 using GoPlugin.Enums;
-using GoPlugin.Events;
 using POGOProtos.Data;
 using MethodResult = Goman_Plugin.Model.MethodResult;
+using Timer = System.Timers.Timer;
 
 namespace Goman_Plugin.Modules.PokemonManager
 {
     public class PokemonManagerModule : AbstractModule
     {
-        public PokemonManagerModule()
+        public new BaseSettings<PokemonManagerSettings> Settings { get; }
+        private static Timer _taskTimer;
+        private Plugin _plugin;
+
+        public PokemonManagerModule(Plugin plugin)
         {
-            Settings = new BaseSettings<PokemonManagerSettings> {Enabled = true};
+            _plugin = plugin;
+            Settings = new BaseSettings<PokemonManagerSettings>() {Enabled = true};
+            _taskTimer = new Timer();
         }
 
-        public new BaseSettings<PokemonManagerSettings> Settings { get; }
-
-
-        public async void Execute(Manager wrappedManager)
+        private void _taskTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            Execute();
+        }
 
-            var manager = wrappedManager.Bot;
-            if (manager.State != BotState.Running) return;
-            await manager.UpdateDetails();
-
-            var pokesToFavorite = new List<PokemonData>();
-            var pokesToRename = new List<PokemonData>();
-            var pokesToUpgrade = new List<PokemonData>();
-            var pokesToEvolve = new List<PokemonData>();
-
-            var pokemonToHandle = GetPokemonToHandle(wrappedManager);
-            if (pokemonToHandle.Count == 0) return;
+        public void Execute()
+        {
+            foreach (var manager in Plugin.Accounts)
+            {
+                if (manager.Bot.State != BotState.Running) continue;
 
 
-            UpdateStarDustAndCandy(wrappedManager, pokemonToHandle);
+                var pokesToFavorite = new List<PokemonData>();
+                var pokesToRename = new List<PokemonData>();
+                var pokesToUpgrade = new List<PokemonData>();
+                var pokesToEvolve = new List<PokemonData>();
+                var pokemonToHandle = GetPokemonToHandle(manager.Bot);
 
-            foreach (var pokemonData in pokemonToHandle)
-                if (PokemonDataMeetsAutoEvolveCriteria(manager, pokemonData))
-                {
-                    pokesToEvolve.Add(pokemonData);
-                }
-                else
-                {
-                    if (PokemonDataMeetsAutoFavoriteCriteria(pokemonData))
-                        pokesToFavorite.Add(pokemonData);
+                if(pokemonToHandle.Count == 0) continue;
+                    manager.Bot.UpdateDetails();
 
-                    if (PokemonDataMeetsAutoRenameCriteria(pokemonData))
-                        pokesToRename.Add(pokemonData);
+                    var totalStardust = manager.Bot.PlayerData.Currencies.FirstOrDefault(x => x.Name == "STARDUST")?.Amount;
 
-                    if (PokemonDataMeetsAutoUpgradeCriteria(wrappedManager, pokemonData))
-                        pokesToUpgrade.Add(pokemonData);
-                }
+                    foreach (var pokemonData in pokemonToHandle)
+                    {
+                        var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
+                        var pokemonSettings = manager.Bot.GetPokemonSetting(pokemonData.PokemonId).Data;
 
-            EvolvePokemon(wrappedManager, pokesToEvolve);
-            UpgradePokemon(wrappedManager, pokesToUpgrade);
-            SetFavorites(wrappedManager, pokesToFavorite);
-            RenameWithIv(wrappedManager, pokesToRename);
+                        var totalCandy =
+                            manager.Bot.PokemonCandy
+                                .FirstOrDefault(x => x.FamilyId == pokemonSettings.FamilyId)?.Candy_;
+                        var candyToEvolve = pokemonSettings.CandyToEvolve;
+
+                        if (pokeSetting.AutoEvolve && candyToEvolve > 0 && totalCandy >= candyToEvolve)
+                        {
+                            pokesToEvolve.Add(pokemonData);
+                        }
+                        else
+                        {
+                            if (pokeSetting.AutoFavorite && pokemonData.Favorite == 0) pokesToFavorite.Add(pokemonData);
+                            if (pokeSetting.AutoRenameWithIv)
+                            {
+                                if (string.IsNullOrEmpty(pokemonData.Nickname))
+                                {
+                                    pokesToRename.Add(pokemonData);
+                                }
+                            }
+                            if (!pokeSetting.AutoUpgrade || totalStardust == null) continue;
+
+                            var pokeLevel = GetPokemonLevel(manager.Bot, pokemonData);
+
+                            if(pokeLevel.Equals(double.Parse(manager.Level)+2)) continue;
+
+                            var powerUpReq = PowerUpTable.Table[pokeLevel];
+
+                            if (totalStardust < powerUpReq.Stardust || totalCandy < powerUpReq.Candy) continue;
+
+                            pokesToUpgrade.Add(pokemonData);
+                            totalStardust -= powerUpReq.Stardust;
+                        }
+                    }
+
+                EvolvePokemon(manager, pokesToEvolve);
+                UpgradePokemon(manager, pokesToUpgrade);
+                SetFavorites(manager, pokesToFavorite);
+                RenameWithIv(manager, pokesToRename);
+            }
+
             
         }
 
-        public List<PokemonData> GetPokemonToHandle(Manager wrappedManager)
+        public List<PokemonData> GetPokemonToHandle(IManager manager)
         {
             var pokemonToHandle = new List<PokemonData>();
-            var manager = wrappedManager.Bot;
 
             foreach (var pokemonManager in Settings.Extra.Pokemons.Values)
+            {                
                 pokemonToHandle
                     .AddRange(
-                        manager.Pokemon
-                            .Where(
-                                poke =>
-                                    poke.PokemonId == pokemonManager.PokemonId &&
-                                    PokemonDataMeetsAutoCriteria(manager, poke, pokemonManager))
-                            .OrderByDescending(poke => manager.CalculateIVPerfection(poke).Data)
-                            .ThenBy(poke => poke.Cp)
-                            .Take(pokemonManager.Quantity));
-
-            return pokemonToHandle;
-        }
-
-        public bool PokemonDataMeetsAutoCriteria(IManager manager, PokemonData poke, PokemonManager pokemonManager)
-        {
-            var settingConfiguredForPokemon = 
-                   pokemonManager.AutoEvolve
-                || pokemonManager.AutoFavorite
-                || pokemonManager.AutoUpgrade
-                || pokemonManager.AutoRenameWithIv
-                || pokemonManager.AutoFavoriteShiny;
-
-            if (!settingConfiguredForPokemon)
-                return false;
-
-            var meetsMinimumIvAndCp = manager.CalculateIVPerfection(poke).Data >= pokemonManager.MinimumIv
-                                      && poke.Cp >= pokemonManager.MinimumCp;
-
-            var isConfiguredForShinyAndIsShiny = (pokemonManager.AutoFavoriteShiny && poke.PokemonDisplay.Shiny);
-
-            return meetsMinimumIvAndCp || isConfiguredForShinyAndIsShiny;
-        }
-
-        public void UpdateStarDustAndCandy(Manager wrappedManager, List<PokemonData> pokemonToHandle)
-        {
-            if (wrappedManager.AutoEvolving ||
-                    wrappedManager.AutoFavoriting ||
-                    wrappedManager.AutoNaming ||
-                    wrappedManager.AutoUpgrading) return;
-
-            var manager = wrappedManager.Bot;
-
-            foreach (var pokemonData in pokemonToHandle)
-            {
-                var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
-                var pokemonSettings = manager.GetPokemonSetting(pokemonData.PokemonId).Data;
-
-                int totalCandy;
-                if (int.TryParse((manager.PokemonCandy.FirstOrDefault(x => x.FamilyId == pokemonSettings.FamilyId)?.Candy_) .ToString(),out totalCandy))
-                    pokeSetting.TotalCandy = totalCandy;
-
-                var candyToEvolve = pokemonSettings.CandyToEvolve;
-
-                pokeSetting.CandyToEvolve = candyToEvolve;
-
+                    manager.Pokemon
+                        .Where(poke => poke.PokemonId == pokemonManager.PokemonId &&
+                                (pokemonManager.AutoEvolve || pokemonManager.AutoFavorite || pokemonManager.AutoUpgrade || pokemonManager.AutoRenameWithIv) &&
+                                manager.CalculateIVPerfection(poke).Data >= pokemonManager.MinimumIv &&
+                                poke.Cp >= pokemonManager.MinimumCp)
+                        .OrderByDescending(poke => manager.CalculateIVPerfection(poke).Data)
+                        .ThenBy(poke => poke.Cp)
+                        .Take(pokemonManager.Quantity));
             }
 
-            int totalStardust;
-            if (int.TryParse((manager.PlayerData.Currencies.FirstOrDefault(x => x.Name == "STARDUST")?.Amount).ToString(),out totalStardust))
-                wrappedManager.TotalStardust = totalStardust;
-
-
-        }
-
-        public bool PokemonDataMeetsAutoEvolveCriteria(IManager manager, PokemonData pokemonData)
-        {
-            var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
-            if (!pokeSetting.AutoEvolve || pokeSetting.CandyToEvolve <= 0 ||
-                pokeSetting.TotalCandy < pokeSetting.CandyToEvolve) return false;
-
-            pokeSetting.TotalCandy -= pokeSetting.CandyToEvolve;
-            return true;
-        }
-
-        public bool PokemonDataMeetsAutoFavoriteCriteria(PokemonData pokemonData)
-        {
-            var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
-            return (pokeSetting.AutoFavorite || pokemonData.PokemonDisplay.Shiny == pokeSetting.AutoFavoriteShiny) &&
-                   pokemonData.Favorite == 0;
-        }
-
-        public bool PokemonDataMeetsAutoRenameCriteria(PokemonData pokemonData)
-        {
-            var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
-            return pokeSetting.AutoRenameWithIv && string.IsNullOrEmpty(pokemonData.Nickname);
-        }
-
-        public bool PokemonDataMeetsAutoUpgradeCriteria(Manager wrappedManager, PokemonData pokemonData)
-        {
-            var manager = wrappedManager.Bot;
-            var pokeSetting = Settings.Extra.Pokemons[pokemonData.PokemonId];
-            if (!pokeSetting.AutoUpgrade || wrappedManager.TotalStardust == 0) return false;
-            var pokeLevel = GetPokemonLevel(manager, pokemonData);
-            if (pokeLevel.Equals(double.Parse(wrappedManager.Level) + 2)) return false;
-            var powerUpReq = PowerUpTable.Table[pokeLevel];
-            if (wrappedManager.TotalStardust < powerUpReq.Stardust || pokeSetting.TotalCandy < powerUpReq.Candy)
-                return false;
-
-
-            pokeSetting.TotalCandy -= powerUpReq.Candy;
-            wrappedManager.TotalStardust -= powerUpReq.Stardust;
-
-            return true;
+            return pokemonToHandle;
         }
 
         public async void EvolvePokemon(Manager manager, List<PokemonData> pokesToEvolve)
@@ -187,14 +127,16 @@ namespace Goman_Plugin.Modules.PokemonManager
                 var results = r.Result;
 
                 OnLogEvent(this,
-                    GetLog(new MethodResult
+                    GetLog(new MethodResult()
                     {
                         Success = results.Success,
                         Message = results.Message,
-                        MethodName = "EvolvePokemon"
+                        MethodName = "EvolvePokemon",
                     }));
                 manager.AutoEvolving = false;
             });
+
+
         }
 
         public void UpgradePokemon(Manager manager, List<PokemonData> pokesToUpgrade)
@@ -205,13 +147,13 @@ namespace Goman_Plugin.Modules.PokemonManager
             {
                 var results = r.Result;
 
-                OnLogEvent(this,
-                    GetLog(new MethodResult
-                    {
-                        Success = results.Success,
-                        Message = results.Message,
-                        MethodName = "UpgradePokemon"
-                    }));
+                            OnLogEvent(this,
+                GetLog(new MethodResult()
+                {
+                    Success = results.Success,
+                    Message = results.Message,
+                    MethodName = "UpgradePokemon",
+                }));
                 manager.AutoUpgrading = false;
             });
         }
@@ -225,16 +167,15 @@ namespace Goman_Plugin.Modules.PokemonManager
                 var results = r.Result;
 
                 OnLogEvent(this,
-                    GetLog(new MethodResult
+                    GetLog(new MethodResult()
                     {
                         Success = results.Success,
                         Message = results.Message,
-                        MethodName = "FavoritePokemon"
+                        MethodName = "FavoritePokemon",
                     }));
                 manager.AutoFavoriting = false;
             });
         }
-
         public void RenameWithIv(Manager manager, List<PokemonData> pokesToRename)
         {
             if (pokesToRename.Count == 0 || manager.AutoNaming) return;
@@ -242,32 +183,14 @@ namespace Goman_Plugin.Modules.PokemonManager
             manager.Bot.RenameAllPokemonToIV(pokesToRename).ContinueWith(r =>
             {
                 OnLogEvent(this,
-                    GetLog(new MethodResult
+                    GetLog(new MethodResult()
                     {
                         Success = !(r.IsCanceled || r.IsFaulted),
                         Message = "Renamed Pokemon",
-                        MethodName = "RenameWithIv"
+                        MethodName = "RenameWithIv",
                     }));
                 manager.AutoNaming = false;
             });
-        }
-
-        public double GetPokemonLevel(IManager manager, PokemonData pokemon)
-        {
-            double cp = pokemon.AdditionalCpMultiplier + pokemon.CpMultiplier;
-
-            for (var i = 0; i < manager.LevelSettings.CpMultiplier.Count; i++)
-            {
-                if (cp.Equals(manager.LevelSettings.CpMultiplier[i]))
-                    return i + 1;
-
-                if (i <= 0 || !(cp < manager.LevelSettings.CpMultiplier[i])) continue;
-
-                if (cp > manager.LevelSettings.CpMultiplier[i - 1])
-                    return i + 0.5;
-            }
-
-            return 0.0;
         }
         public override async Task<MethodResult> Enable(bool forceSubscribe = false)
         {
@@ -275,37 +198,43 @@ namespace Goman_Plugin.Modules.PokemonManager
 
             if (Settings.Enabled)
             {
-                if (forceSubscribe)
-                {
-                    foreach (var account in Plugin.Accounts)
-                    {
-                        PluginOnManagerAdded(this, account);
-                    }
-                }
+                _taskTimer.Interval = Settings.Extra.IntervalMilliseconds;
 
-                Plugin.ManagerAdded += PluginOnManagerAdded;
-                Plugin.ManagerRemoved += PluginOnManagerRemoved;
-
+                _taskTimer.Elapsed += _taskTimer_Elapsed;
+                _taskTimer.Enabled = true;
                 OnModuleEvent(this, Modules.ModuleEvent.Enabled);
+                Execute();
             }
 
-            return new MethodResult { Success = Settings.Enabled };
+            return new MethodResult {Success = Settings.Enabled};
         }
+        public double GetPokemonLevel(IManager manager, PokemonData pokemon)
+        {
 
+            double cp = pokemon.AdditionalCpMultiplier + pokemon.CpMultiplier;
+
+            for (var i = 0; i < manager.LevelSettings.CpMultiplier.Count; i++)
+            {
+                if (cp.Equals(manager.LevelSettings.CpMultiplier[i]))
+                {
+                    return i + 1;
+                }
+
+                if (i <= 0 || !(cp < manager.LevelSettings.CpMultiplier[i])) continue;
+
+                if (cp > manager.LevelSettings.CpMultiplier[i - 1])
+                {
+                    return i + 0.5;
+                }
+            }
+
+            return 0.0;
+        }
         public override async Task<MethodResult> Disable(bool forceUnsubscribe = false)
         {
-            Plugin.ManagerAdded -= PluginOnManagerAdded;
-            Plugin.ManagerRemoved -= PluginOnManagerRemoved;
-
-            await SaveSettings();
-            if (forceUnsubscribe)
-            {
-                foreach (var account in Plugin.Accounts)
-                {
-                    PluginOnManagerRemoved(this, account);
-                }
-            }
-
+            if (!_taskTimer.Enabled) return new MethodResult {Success = true};
+            _taskTimer.Elapsed -= _taskTimer_Elapsed;
+            _taskTimer.Enabled = false;
             await SaveSettings();
             OnModuleEvent(this, Modules.ModuleEvent.Disabled);
             return new MethodResult {Success = true};
@@ -332,72 +261,6 @@ namespace Goman_Plugin.Modules.PokemonManager
             saveSettingsResult.MethodName = "SaveSettings";
             OnLogEvent(this, GetLog(saveSettingsResult));
             return saveSettingsResult;
-        }
-
-        private void PluginOnManagerAdded(object o, Manager manager)
-        {
-            // OnLogEvent(this, new LogModel(LoggerTypes.Info, $"Subscribing to account {manager.Bot.AccountName}"));
-            manager.OnPokestopFarmedEvent += OnPokestopFarmedEvent;
-            manager.OnPokemonCaughtEvent += OnPokemonCaughtEvent;
-            manager.OnLocationUpdateEvent += OnLocationUpdateEvent;
-        }
-
-        private void PluginOnManagerRemoved(object o, Manager manager)
-        {
-            // OnLogEvent(this, new LogModel(LoggerTypes.Info, $"Unsubscribing to account {manager.Bot.AccountName}"));
-            manager.OnPokestopFarmedEvent -= OnPokestopFarmedEvent;
-            manager.OnPokemonCaughtEvent -= OnPokemonCaughtEvent;
-            manager.OnLocationUpdateEvent -= OnLocationUpdateEvent;
-        }
-
-        private void OnLocationUpdateEvent(object arg1, LocationUpdateEventArgs locationUpdateEventArgs)
-        {
-            var wrappedManager = (Manager)arg1;
-            OnLogEvent(this, new LogModel(LoggerTypes.Success, $"OnLocationUpdateEvent poke manager on account {wrappedManager.Bot.AccountName}"), null);
-            Execute(wrappedManager);
-        }
-
-        private async void OnPokemonCaughtEvent(object arg1, PokemonCaughtEventArgs arg2)
-        {
-           var wrappedManager = (Manager)arg1;
-           var manager = wrappedManager.Bot;
-           var pokemonData = arg2.Pokemon;
-           OnLogEvent(this, new LogModel(LoggerTypes.Success, $"OnPokemonCaught Pokemon Manager on account {wrappedManager.Bot.AccountName}"), null);
-           await manager.UpdateDetails();
-
-           var pokemonToHandle = new List<PokemonData>() {pokemonData};
-           UpdateStarDustAndCandy(wrappedManager, pokemonToHandle);
-           
-           
-           if (PokemonDataMeetsAutoEvolveCriteria(manager, pokemonData))
-           {
-               await manager.EvolvePokemon(new[] {pokemonData});
-           }
-           else
-           {
-               if (PokemonDataMeetsAutoFavoriteCriteria(pokemonData))
-               {
-                   await manager.FavoritePokemon(new[] { pokemonData });
-               }
-           
-           
-               if (PokemonDataMeetsAutoRenameCriteria(pokemonData))
-               {
-                   await manager.RenameAllPokemonToIV(new[] {pokemonData});
-               }
-           
-               if (PokemonDataMeetsAutoUpgradeCriteria(wrappedManager, pokemonData))
-               {
-                   await manager.UpgradePokemon(new[] {pokemonData}, 100);
-               }
-           }
-        }
-
-        private void OnPokestopFarmedEvent(object arg1, EventArgs arg2)
-        {
-            var wrappedManager = (Manager)arg1;
-            OnLogEvent(this, new LogModel(LoggerTypes.Success, $"OnPokestopFarmedEvent poke manager  on account {wrappedManager.Bot.AccountName}"), null);
-            Execute(wrappedManager);
         }
     }
 }

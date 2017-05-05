@@ -26,7 +26,7 @@ namespace Goman_Plugin.Modules.Captcha
             this.fastObjectListViewLogs.PrimarySortOrder = SortOrder.Descending;
             this.fastObjectListViewLogs.ListFilter = new TailFilter(200);
         }
-        internal void Opening()
+        internal void SetControls()
         {
             this.fastObjecttListViewAccounts.PrimarySortColumn = this.olvBotState;
             this.fastObjecttListViewAccounts.PrimarySortOrder = SortOrder.Descending;
@@ -38,18 +38,11 @@ namespace Goman_Plugin.Modules.Captcha
             cbkEnabled.Checked = Plugin.CaptchaModule.Settings.Enabled;
 
             fastObjectListViewLogs.SetObjects(Plugin.CaptchaModule.Logs);
-            //Plugin.CaptchaModule.LogEvent += LogEvent;
+           //Plugin.CaptchaModule.LogEvent += (o, model) =>
+           //{
+           //    fastObjectListViewLogs.Refresh();
+           //};
         }
-
-        internal void Closing()
-        {
-           // Plugin.CaptchaModule.LogEvent -= LogEvent;
-        }
-        private void LogEvent(object arg1, LogModel arg2)
-        {
-            fastObjectListViewLogs.AddObject(arg2);
-        }
-
         private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             fastObjecttListViewAccounts.RefreshObject(Plugin.Accounts.First());
@@ -75,6 +68,7 @@ namespace Goman_Plugin.Modules.Captcha
                             e.SubItem.ForeColor = Color.Red;
                             break;
                         case AccountState.AccountWarning:
+                        case AccountState.PokemonBanOrPokestopBanTemp:
                         case AccountState.PokemonBanAndPokestopBanTemp:
                         case AccountState.PokestopBanTemp:
                         case AccountState.PokemonBanTemp:

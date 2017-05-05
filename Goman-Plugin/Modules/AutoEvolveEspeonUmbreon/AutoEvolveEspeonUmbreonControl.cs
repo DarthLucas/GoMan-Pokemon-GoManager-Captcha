@@ -19,21 +19,17 @@ namespace Goman_Plugin.Modules.AutoEvolveEspeonUmbreon
             this.fastObjectListViewLogs.ListFilter = new TailFilter(200);            
         }
 
-        internal void Opening()
+        internal void SetControls()
         {
             cbkEnabled.Checked = Plugin.AutoEvolveEspeonUmbreonModule.Settings.Enabled;
             textBox1.Text = Plugin.AutoEvolveEspeonUmbreonModule.Settings.Extra.IntervalMilliseconds.ToString();
             fastObjectListViewLogs.SetObjects(Plugin.AutoEvolveEspeonUmbreonModule.Logs);
-            Plugin.AutoEvolveEspeonUmbreonModule.LogEvent += LogEvent;
+            //Plugin.AutoEvolveEspeonUmbreonModule.LogEvent += (o, model) =>
+            //{
+            //    fastObjectListViewLogs.AddObject(model);
+            //};
         }
-        internal void Closing()
-        {
-           // Plugin.AutoEvolveEspeonUmbreonModule.LogEvent -= LogEvent;
-        }
-        private void LogEvent(object arg1, LogModel arg2)
-        {
-            fastObjectListViewLogs.AddObject(arg2);
-        }
+
         private async void cbkEnabled_CheckedChanged(object sender, EventArgs e)
         {
             Plugin.AutoEvolveEspeonUmbreonModule.Settings.Enabled = cbkEnabled.Checked;

@@ -20,20 +20,12 @@ namespace Goman_Plugin.Modules.PokemonManager
             this.fastObjectListViewLogs.ListFilter = new TailFilter(200);
         }
 
-        internal void Opening()
+        internal void SetControls()
         {
             cbkEnabled.Checked = Plugin.PokemonManagerModule.Settings.Enabled;
             fastObjectListViewLogs.SetObjects(Plugin.PokemonManagerModule.Logs);
             fastObjectListViewPokemon.SetObjects(Plugin.PokemonManagerModule.Settings.Extra.Pokemons.Values.ToList());
-            Plugin.PokemonManagerModule.LogEvent += LogEvent;
-        }
-        internal void Closing()
-        {
-            //Plugin.PokemonManagerModule.LogEvent -= LogEvent;
-        }
-        private void LogEvent(object arg1, LogModel arg2)
-        {
-            fastObjectListViewLogs.AddObject(arg2);
+           // Plugin.PokemonManagerModule.LogEvent += (o, model) => fastObjectListViewLogs.AddObject(model);
         }
 
         private async void cbkEnabled_CheckedChanged(object sender, EventArgs e)
@@ -68,8 +60,6 @@ namespace Goman_Plugin.Modules.PokemonManager
                     e.SubItem.ForeColor = (pokemon.AutoUpgrade) ? Color.Green : Color.Red;
                 else if (e.Column == this.olvColumnAutoRenameWithIv)
                     e.SubItem.ForeColor = (pokemon.AutoRenameWithIv) ? Color.Green : Color.Red;
-                else if (e.Column == this.olvColumnAutoFavoriteShiny)
-                    e.SubItem.ForeColor = (pokemon.AutoFavoriteShiny) ? Color.Green : Color.Red;
 
             }
 
@@ -132,7 +122,7 @@ namespace Goman_Plugin.Modules.PokemonManager
             autoFavoriteToolStripMenuItem.Checked = contextOptions.AutoFavoriteIsEnabled;
             autoUpgradeToolStripMenuItem.Checked = contextOptions.AutoUpgradeIsEnabled;
             autoRenameToIVToolStripMenuItem.Checked = contextOptions.AutoRenameIsEnabled;
-            autoFavoriteShinyToolStripMenuItem.Checked = contextOptions.AutoFavoriteShinyIsEnabled;
+
             blockSaving = false;
         }
 
@@ -145,8 +135,6 @@ namespace Goman_Plugin.Modules.PokemonManager
                     contextOptions.AutoEvolveIsEnabled = false;
                 if (!pokemonManager.AutoFavorite)
                     contextOptions.AutoFavoriteIsEnabled = false;
-                if (!pokemonManager.AutoFavoriteShiny)
-                    contextOptions.AutoFavoriteShinyIsEnabled = false;
                 if (!pokemonManager.AutoUpgrade)
                     contextOptions.AutoUpgradeIsEnabled = false;
                 if (!pokemonManager.AutoRenameWithIv)
@@ -195,16 +183,6 @@ namespace Goman_Plugin.Modules.PokemonManager
             fastObjectListViewPokemon.RefreshObjects(Plugin.PokemonManagerModule.Settings.Extra.Pokemons.Values.ToList());
             await Plugin.PokemonManagerModule.SaveSettings();
         }
-
-        private async void autoFavoriteShinyToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (blockSaving) return;
-            foreach (PokemonManager pokemonManager in fastObjectListViewPokemon.SelectedObjects)
-                Plugin.PokemonManagerModule.Settings.Extra.Pokemons[pokemonManager.PokemonId].AutoFavoriteShiny = autoFavoriteShinyToolStripMenuItem.Checked;
-
-            fastObjectListViewPokemon.RefreshObjects(Plugin.PokemonManagerModule.Settings.Extra.Pokemons.Values.ToList());
-            await Plugin.PokemonManagerModule.SaveSettings();
-        }
     }
 
     public class ContextOptions
@@ -213,6 +191,5 @@ namespace Goman_Plugin.Modules.PokemonManager
         public bool AutoFavoriteIsEnabled { get; set; } = true;
         public bool AutoUpgradeIsEnabled { get; set; } = true;
         public bool AutoRenameIsEnabled { get; set; } = true;
-        public bool AutoFavoriteShinyIsEnabled { get; set; } = true;
     }
 }

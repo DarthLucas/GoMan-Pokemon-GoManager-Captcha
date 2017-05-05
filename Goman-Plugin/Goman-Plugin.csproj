@@ -48,8 +48,9 @@
     <Reference Include="Google.Protobuf">
       <HintPath>..\packages\Google.Protobuf.dll</HintPath>
     </Reference>
-    <Reference Include="GoPlugin">
-      <HintPath>..\packages\GoPlugin.dll</HintPath>
+    <Reference Include="GoPlugin, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Desktop\flame_accounts\2.2.8.9\GoPlugin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -102,6 +103,30 @@
     </Compile>
     <Compile Include="Modules\AutoEvolveEspeonUmbreon\AutoEvolveEspeonUmbreonControl.Designer.cs">
       <DependentUpon>AutoEvolveEspeonUmbreonControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyModule.cs" />
+    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinySettings.cs" />
+    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyUserControl.Designer.cs">
+      <DependentUpon>AutoFavoriteShinyUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\AutoRename100IVOnCaught\AutoRename100IVOnCaughtUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Modules\AutoRename100IVOnCaught\AutoRename100IVOnCaughtUserControl.Designer.cs">
+      <DependentUpon>AutoRename100IVOnCaughtUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\AutoRename100IVOnCaught\AutoRename100IVOnCaughtModule.cs" />
+    <Compile Include="Modules\AutoRename100IVOnCaught\AutoRename100IVOnCaughtSettings.cs" />
+    <Compile Include="Modules\AutoStratTechnique\AutoStratTechniqueModule.cs" />
+    <Compile Include="Modules\AutoStratTechnique\AutoStratTechniqueSettings.cs" />
+    <Compile Include="Modules\AutoStratTechnique\AutoStratTechniqueUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Modules\AutoStratTechnique\AutoStratTechniqueUserControl.Designer.cs">
+      <DependentUpon>AutoStratTechniqueUserControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Modules\PokemonManager\PokemonManagerUserControl.cs">
       <SubType>UserControl</SubType>
@@ -171,6 +196,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\AutoEvolveEspeonUmbreon\AutoEvolveEspeonUmbreonControl.resx">
       <DependentUpon>AutoEvolveEspeonUmbreonControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\AutoFavoriteShiny\AutoFavoriteShinyUserControl.resx">
+      <DependentUpon>AutoFavoriteShinyUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\AutoRename100IVOnCaught\AutoRename100IVOnCaughtUserControl.resx">
+      <DependentUpon>AutoRename100IVOnCaughtUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modules\AutoStratTechnique\AutoStratTechniqueUserControl.resx">
+      <DependentUpon>AutoStratTechniqueUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Modules\Captcha\CaptchaUserControl.resx">
       <DependentUpon>CaptchaUserControl.cs</DependentUpon>
