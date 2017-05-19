@@ -24,10 +24,10 @@ namespace Goman_Plugin.Modules.AutoStratTechnique
 
         public AutoStratTechniqueModule()
         {
-            Settings = new BaseSettings<AutoStratTechniqueSettings> { Enabled = true };
+            Settings = new BaseSettings<AutoStratTechniqueSettings> { Enabled = false };
             LastLogMessageMunger = new Munger("LastLogMessage");
         }
-        public async override Task<MethodResult> Disable(bool forceUnubscribe = false)
+        public override async Task<MethodResult> Disable(bool forceUnubscribe = false)
         {
             Plugin.ManagerAdded -= PluginOnManagerAdded;
             Plugin.ManagerRemoved -= PluginOnManagerRemoved;
@@ -43,24 +43,21 @@ namespace Goman_Plugin.Modules.AutoStratTechnique
             return new MethodResult() { Success = true }; //Login();
         }
 
-        public async override Task<MethodResult> Enable(bool forceSubscribe = false)
+        public override async Task<MethodResult> Enable(bool forceSubscribe = false)
         {
             await LoadSettings();
             // Settings.Extra.MyAwesomeSetting //acccess it like this
-            if (Settings.Enabled)
+            if (!Settings.Enabled) return new MethodResult {Success = true};
+            if (forceSubscribe)
             {
-
-                if (forceSubscribe)
+                foreach (var account in Plugin.Accounts)
                 {
-                    foreach (var account in Plugin.Accounts)
-                    {
-                        PluginOnManagerAdded(this, account);
-                    }
+                    PluginOnManagerAdded(this, account);
                 }
-                Plugin.ManagerAdded += PluginOnManagerAdded;
-                Plugin.ManagerRemoved += PluginOnManagerRemoved;
-                OnModuleEvent(this, Modules.ModuleEvent.Enabled);
             }
+            Plugin.ManagerAdded += PluginOnManagerAdded;
+            Plugin.ManagerRemoved += PluginOnManagerRemoved;
+            OnModuleEvent(this, Modules.ModuleEvent.Enabled);
             return new MethodResult { Success = true };
         }
 

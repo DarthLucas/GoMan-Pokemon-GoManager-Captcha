@@ -23,6 +23,7 @@ namespace Goman_Plugin
 {
     public class Plugin : IPlugin
     {
+
         public static ConcurrentHashSet<Manager> Accounts = new ConcurrentHashSet<Manager>();
         internal static BaseSettings<GlobalSettings> GlobalSettings = new BaseSettings<GlobalSettings>();
         internal static AccountMapModule AccountMapModule = new AccountMapModule();
@@ -68,7 +69,6 @@ namespace Goman_Plugin
             AuthenticationModule.ModuleEvent += AuthenticationModuleEvent;
             var enableResults = await AuthenticationModule.Enable();
 
-           
             return enableResults.Success;
         }
         private async Task Update()
@@ -130,6 +130,7 @@ namespace Goman_Plugin
                 await AutoStratTechniqueModule.Disable();
             }
         }
+
         public override void AddManager(IManager manager)
         {
             var wrappedManager = new Manager(manager);
@@ -139,6 +140,7 @@ namespace Goman_Plugin
         }
         private void OnManagerAdded(object arg1, Manager arg2)
         {
+            
             ManagerAdded?.Invoke(arg1, arg2);
         }
         public override void RemoveManager(IManager manager)

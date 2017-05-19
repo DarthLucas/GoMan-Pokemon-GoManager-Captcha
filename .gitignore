@@ -19,3 +19,17 @@
 /Goman-Plugin/bin/Debug
 /.vs/GoMan-Pokemon-GoManager-Plugin/v14
 /Goman-Plugin/obj/Release
+/Goman-Plugin/bin/Release/C5.dll
+/Goman-Plugin/bin/Release/GMap.NET.Core.dll
+/Goman-Plugin/bin/Release/S2Geometry.dll
+/Goman-Plugin/bin/Release/PogoProtos.dll
+/Goman-Plugin/bin/Release/ObjectListView.dll
+/Goman-Plugin/bin/Release/Newtonsoft.Json.xml
+/Goman-Plugin/bin/Release/Newtonsoft.Json.dll
+/Goman-Plugin/bin/Release/GoPlugin.dll
+/Goman-Plugin/bin/Release/Google.Protobuf.dll
+/Goman-Plugin/bin/Release/Goman-Plugin.pdb
+/Goman-Plugin/bin/Release/Goman-Plugin.dll.config
+/Goman-Plugin/bin/Release/GMap.NET.WindowsForms.xml
+/Goman-Plugin/bin/Release/GMap.NET.WindowsForms.dll
+/Goman-Plugin/bin/Release/GMap.NET.Core.xml
