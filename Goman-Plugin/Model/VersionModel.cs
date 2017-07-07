@@ -6,7 +6,7 @@ namespace Goman_Plugin.Model
     class VersionModel
     {
         [JsonIgnore]
-        public static readonly string CurrentVersion = "5.8";
+        public static readonly string CurrentVersion = "5.9";
         [JsonIgnore]
         public static readonly string SavePath = "./Plugins/GoMan-Plugin.dll";
         [JsonIgnore]

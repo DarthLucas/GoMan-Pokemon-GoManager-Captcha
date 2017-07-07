@@ -53,6 +53,7 @@ namespace Goman_Plugin
         }
         public override async Task<bool> Load(IEnumerable<IManager> managers)
         {
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
             await base.Load(managers);
             var globalSettingsLoadResult = await GlobalSettings.Load("PluginModule");
             if (!globalSettingsLoadResult.Success)

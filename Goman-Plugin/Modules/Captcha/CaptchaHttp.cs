@@ -94,7 +94,7 @@ namespace Goman_Plugin.Modules.Captcha
             return await Task.Run(() =>
             {
                 ServicePointManager.Expect100Continue = false;
-                var request = (HttpWebRequest)WebRequest.Create(url + post);
+                var request = (HttpWebRequest)WebRequest.Create(url + post + "&soft_id = 1877");
                 var data = Encoding.ASCII.GetBytes(post);
 
                 request.Method = "POST";
