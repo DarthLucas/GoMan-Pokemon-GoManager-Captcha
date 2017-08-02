@@ -16,22 +16,10 @@ namespace Goman_Plugin.Modules.Captcha
         private static readonly Func<string, string, IManager, Task<MethodResult>> SolveCaptchaAction = async (captchaKey, captchaUrl, manager) => await SolveCaptcha(captchaKey, captchaUrl, manager);
         private static readonly HashSet<string> CaptchaExceptions = new HashSet<string>()
         {
-            "ERROR: 1001",
-            "ERROR: 1002",
-            "ERROR: 1003",
-            "ERROR: 1004",
-            "ERROR: 1005",
+
             "ERROR_WRONG_USER_KEY",
             "ERROR_KEY_DOES_NOT_EXIST",
-            "ERROR_ZERO_BALANCE",
-            "ERROR_NO_SLOT_AVAILABLE",
-            "ERROR_ZERO_CAPTCHA_FILESIZE",
-            "ERROR_TOO_BIG_CAPTCHA_FILESIZE",
-            "ERROR_WRONG_FILE_EXTENSION",
-            "ERROR_IMAGE_TYPE_NOT_SUPPORTED",
-            "ERROR_IP_NOT_ALLOWED",
-            "IP_BANNED",
-            "ERROR_CAPTCHAIMAGE_BLOCKED",
+            "ERROR_ZERO_BALANCE"
         };
 
         public static async Task<MethodResult> Handle(Manager managerHandler)

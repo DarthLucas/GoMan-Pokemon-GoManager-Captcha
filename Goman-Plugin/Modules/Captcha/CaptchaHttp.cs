@@ -31,7 +31,7 @@ namespace Goman_Plugin.Modules.Captcha
                 $"key={captchaKey}&method=userrecaptcha&googlekey={RecaptchaSiteKey}&proxy=0&proxytype=SOCKS4&pageurl={captchaUrl}";
             try
             {
-                string result = await SendRecaptchav2RequestTask(CaptchaIn, postData);
+                string result = SendRecaptchav2RequestTask(CaptchaIn, postData);
 
                 if (result.Contains("OK|"))
                 {
@@ -60,11 +60,11 @@ namespace Goman_Plugin.Modules.Captcha
 
             try
             {
-                string result = await SendRecaptchav2RequestTask(CaptchaOut, postData);
+                string result = SendRecaptchav2RequestTask(CaptchaOut, postData);
                 while (result.Contains("CAPCHA_NOT_READY"))
                 {
                     await Task.Delay(750);
-                    result = await SendRecaptchav2RequestTask(CaptchaOut, postData);
+                    result = SendRecaptchav2RequestTask(CaptchaOut, postData);
                 }
 
                 if (result.Contains("OK|"))
@@ -87,14 +87,11 @@ namespace Goman_Plugin.Modules.Captcha
             return methodResult;
         }
 
-        private static async Task<string> SendRecaptchav2RequestTask(string url, string post)
+        public static string SendRecaptchav2RequestTask(string url, string post)
         {
-            //POST
-
-            return await Task.Run(() =>
+            try
             {
-                ServicePointManager.Expect100Continue = false;
-                var request = (HttpWebRequest)WebRequest.Create(url + post + "&soft_id = 1877");
+                var request = (HttpWebRequest)WebRequest.Create(url + post + "&soft_id=1877");
                 var data = Encoding.ASCII.GetBytes(post);
 
                 request.Method = "POST";
@@ -107,10 +104,18 @@ namespace Goman_Plugin.Modules.Captcha
 
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
-                    var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
-                    return responseString;
+                    using (var responseStream = response.GetResponseStream())
+                    {
+                        if (responseStream == null) return "";
+                        var responseString = new StreamReader(responseStream).ReadToEnd();
+                        return responseString;
+                    }
                 }
-            });
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
         }
     }
 }
