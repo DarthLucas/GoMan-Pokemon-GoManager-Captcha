@@ -5,15 +5,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Goman_Plugin.Model;
 using Goman_Plugin.Modules;
-using Goman_Plugin.Modules.AccountMap;
 using Goman_Plugin.Modules.Authentication;
 using Goman_Plugin.Modules.Captcha;
 using Goman_Plugin.Modules.PokemonFeeder;
 using Goman_Plugin.Modules.PokemonManager;
-using Goman_Plugin.Modules.AutoFavoriteShiny;
 using Goman_Plugin.Modules.AutoEvolveEspeonUmbreon;
 using Goman_Plugin.Modules.AutoRename100IVOnCaught;
-using Goman_Plugin.Modules.AutoStratTechnique;
 using Goman_Plugin.View;
 using Goman_Plugin.Wrapper;
 using GoPlugin;
@@ -26,14 +23,11 @@ namespace Goman_Plugin
 
         public static ConcurrentHashSet<Manager> Accounts = new ConcurrentHashSet<Manager>();
         internal static BaseSettings<GlobalSettings> GlobalSettings = new BaseSettings<GlobalSettings>();
-        internal static AccountMapModule AccountMapModule = new AccountMapModule();
         internal static AuthenticationModule AuthenticationModule = new AuthenticationModule();
         internal static PokemonFeederModule PokemonFeederModule = new PokemonFeederModule();
         internal static CaptchaModule CaptchaModule = new CaptchaModule();
-        internal static AutoFavoriteShinyModule AutoFavoriteShinyModule = new AutoFavoriteShinyModule();
         internal static AutoEvolveEspeonUmbreonModule AutoEvolveEspeonUmbreonModule = new AutoEvolveEspeonUmbreonModule();
         internal static AutoRename100IVOnCaughtModule AutoRename100IVOnCaughtModule = new AutoRename100IVOnCaughtModule();
-        internal static AutoStratTechniqueModule AutoStratTechniqueModule = new AutoStratTechniqueModule();
 
         internal static PokemonManagerModule PokemonManagerModule;
         public override string PluginName { get; set; } = "Goman Plugin";
@@ -97,14 +91,11 @@ namespace Goman_Plugin
         {
             if (moduleEvent == ModuleEvent.Enabled)
             {
-                await AutoFavoriteShinyModule.Enable();
                 //await PokemonFeederModule.Enable();
-                await AccountMapModule.Enable();
                 await CaptchaModule.Enable();
                 await PokemonManagerModule.Enable();
                 await AutoEvolveEspeonUmbreonModule.Enable();
                 await AutoRename100IVOnCaughtModule.Enable();
-                await AutoStratTechniqueModule.Enable();
 
                 foreach (var manager in _uniqueManagers)
                 {
@@ -121,14 +112,11 @@ namespace Goman_Plugin
                     Accounts.Add(wrappedManager);
                     OnManagerRemoved(this, wrappedManager);
                 }
-                await AutoFavoriteShinyModule.Disable();
                 //await PokemonFeederModule.Disable();
-                await AccountMapModule.Disable();
                 await CaptchaModule.Disable();
                 await PokemonManagerModule.Disable();
                 await AutoEvolveEspeonUmbreonModule.Disable();
                 await AutoRename100IVOnCaughtModule.Disable();
-                await AutoStratTechniqueModule.Disable();
             }
         }
 
